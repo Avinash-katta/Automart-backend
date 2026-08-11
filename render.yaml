@@ -1,30 +1,19 @@
 services:
-  # 1. Spring Boot Web Service
+  # The Backend Spring Boot Web Service
   - type: web
     name: automart-backend
     env: docker
     dockerContext: .
     dockerfilePath: Dockerfile
+    plan: free # Deploys on Render's Free tier
     envVars:
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:mysql://automart-db:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+        value: jdbc:mysql://mysql-3cf5eb6c-avinashkatta05-f56f.h.aivencloud.com:12516/defaultdb?useSSL=true&verifyServerCertificate=false&serverTimezone=UTC
       - key: SPRING_DATASOURCE_USERNAME
-        value: root
+        value: avnadmin
       - key: SPRING_DATASOURCE_PASSWORD
-        value: Avinash@05
+        sync: true # Render will securely prompt you to input your Aiven database password during deployment
       - key: FRONTEND_URL
-        value: https://automart-sand.vercel.app # Override this in Render Dashboard with your actual Vercel domain URL
+        value: https://automart-front.vercel.app # Override this with your actual live Vercel URL
       - key: RAZORPAY_API_SECRET
-        sync: false # Set this value manually in your Render Environment dashboard settings
-
-  # 2. Private MySQL Database Service
-  - type: pserv
-    name: automart-db
-    env: image
-    image:
-      url: mysql:8.0
-    envVars:
-      - key: MYSQL_ROOT_PASSWORD
-        value: Avinash@05
-      - key: MYSQL_DATABASE
-        value: ecommerce
+        sync: false
