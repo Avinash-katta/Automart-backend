@@ -1,0 +1,36 @@
+services:
+  # 1. Spring Boot Web Service
+  - type: web
+    name: automart-backend
+    env: docker
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://automart-db:3306/ecommerce?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - key: SPRING_DATASOURCE_USERNAME
+        value: root
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromService:
+          name: automart-db
+          type: pserv
+          property: envVar:MYSQL_ROOT_PASSWORD
+      - key: FRONTEND_URL
+        value: https://automart-front.vercel.app # Override this in Render Dashboard with your actual Vercel domain URL
+      - key: RAZORPAY_API_SECRET
+        sync: false # Set this value manually in your Render Environment dashboard settings
+
+  # 2. Private MySQL Database Service
+  - type: pserv
+    name: automart-db
+    env: image
+    image: mysql:8.0
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1 # Optional persistent disk. For a free tier deployment without data persistence, you can remove this block.
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: ecommerce
