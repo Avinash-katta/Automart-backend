@@ -12,7 +12,7 @@ services:
       - key: SPRING_DATASOURCE_USERNAME
         value: avnadmin
       - key: SPRING_DATASOURCE_PASSWORD
-        sync: true # Render will securely prompt you to input your Aiven database password during deployment
+        value: "" # Put your Aiven MySQL password here, or update it in the Render dashboard after import
       - key: FRONTEND_URL
         value: https://automart-front.vercel.app # Override this with your actual live Vercel URL
       - key: RAZORPAY_API_SECRET
